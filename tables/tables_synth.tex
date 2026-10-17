@@ -1,0 +1,41 @@
+============================== TABLE 5.1 (coverage)
+% Table 5.1: margin-bound coverage, %%NREP%% replicates
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+$m$ & $d$ & $\kappa$ & $\gamma$ & $\gamma^2 m$ & $\min_p(C_p-(1-p))$ & worst rep \\ \hline
+200 & 5 & 2.7$\pm$0.3 & 0.096$\pm$0.045 & 2.3 & 0.049$\pm$0.002 & 0.045 \\
+800 & 5 & 3.6$\pm$0.4 & 0.112$\pm$0.045 & 11.7 & 0.050$\pm$0.000 & 0.049 \\
+3200 & 5 & 4.1$\pm$0.5 & 0.123$\pm$0.044 & 54.6 & 0.050$\pm$0.000 & 0.050 \\
+800 & 5 & 5.6$\pm$0.3 & 0.314$\pm$0.027 & 79.4 & 0.050$\pm$0.000 & 0.050 \\
+800 & 5 & 9.5$\pm$0.5 & 0.516$\pm$0.024 & 213.2 & 0.050$\pm$0.000 & 0.050 \\
+800 & 50 & 2.6$\pm$0.0 & 0.060$\pm$0.007 & 3.0 & 0.047$\pm$0.002 & 0.045 \\
+\hline
+\end{tabular}
+============================== TABLE 5.3 (alpha)
+% alpha table, setting m=3200, gamma=0.1229
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$\alpha$ & $T(\alpha)$ entry & $1-p$ at $T{=}10^4$ & coverage & bound plateau & $\alpha^\star$ range \\ \hline
+0.25 & 3.6e+08 & 0.715 & 0.980$\pm$0.000 & 9.501 & -- \\
+0.5 & 1.5e+05 & 0.919 & 0.980$\pm$0.000 & 21.377 & -- \\
+0.75 & 1.2e+04 & 0.977 & 0.980$\pm$0.000 & 85.509 & -- \\
+\hline
+\end{tabular}
+============================== TABLE 5.2 (E2)
+% Table 5.2: explicit bound comparison
+% design A: m=2000 d=5 kappa=5.7 gamma=0.312 g2m=195 edges first/mean/min=0.4985/0.4918/0.4816
+%   T=100: our=3.143 (a*=0.10) ghojMin=6.51e-57 ghojMean=3.75e-74 gdErr=0.0000 adaErr=0.0000
+%   T=1000: our=2.742 (a*=0.17) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+%   T=3000: our=2.585 (a*=0.17) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+% design B: m=2000 d=50 kappa=7.4 gamma=0.361 g2m=261 edges first/mean/min=0.3745/0.4298/0.3745
+%   T=100: our=2.652 (a*=0.17) ghojMin=3.51e-18 ghojMean=2.52e-29 gdErr=0.0000 adaErr=0.0000
+%   T=1000: our=2.219 (a*=0.20) ghojMin=2.80e-175 ghojMean=1.02e-286 gdErr=0.0000 adaErr=0.0000
+%   T=3000: our=2.069 (a*=0.20) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+% design C: m=5000 d=5 kappa=12.5 gamma=0.557 g2m=1550 edges first/mean/min=0.5000/0.5000/0.5000
+%   T=100: our=0.998 (a*=0.41) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+%   T=1000: our=0.686 (a*=0.36) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+%   T=3000: our=0.603 (a*=0.34) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+% design D: m=20000 d=5 kappa=16.3 gamma=0.611 g2m=7469 edges first/mean/min=0.5000/0.5000/0.5000
+%   T=100: our=0.483 (a*=0.55) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+%   T=1000: our=0.274 (a*=0.48) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
+%   T=3000: our=0.226 (a*=0.46) ghojMin=0.00e+00 ghojMean=0.00e+00 gdErr=0.0000 adaErr=0.0000
