@@ -1,36 +1,35 @@
-"""E2: explicit generalization-bound comparison (replaces the old Table 3).
+"""E2: numerical values of the explicit generalization bound (Table 5.2).
 
-Fixes to Report 1, point 4 and Report 2:
-  - the margin gamma is measured by a hard-margin SVM in exactly the geometry
-    of the revised theory (unit ball, unit-norm linear separator);
-  - our bound is reported with EXPLICIT constants (no tilde-O dropped):
-        err <= 2 p + 1/m + 16 ln m/((1-a)^2 g^2 m) + 2 ln(2 sqrt(m)/d)/m,
-    p = (g^2 T)^{-a}, optimized over a, delta = 0.05;
-  - the competing Ghojogh-Crowley bound is applied with the correct
-    interpretation of xi as the per-round EDGE (their eq. (111) requires
-    weighted error <= 1/2 - xi for every round), using both the minimum edge
-    over rounds (the only assumption-valid value) and the mean edge (as in
-    the original submission).
+For the four synthetic designs (A--D) of the paper's Table 5.2 this script
+  - generates separable two-class Gaussian data with the protocol of
+    ``common.make_separable`` (kappa raised until the sample is separable
+    with the target margin; gamma measured by a hard-margin SVM on the
+    unit-ball-rescaled training set, so the measured gamma is exactly the
+    theoretical quantity),
+  - runs the analyzed algorithm (B: gradient descent with step size 1 on
+    the logistic loss) and, as a beyond-scope check, stagewise Discrete
+    AdaBoost with decision stumps,
+  - evaluates the fully explicit bound (``common.pacbayes_bound``) with
+    delta = 0.05 and alpha optimized numerically for each (gamma, m, T).
 
 Designs:
-  A: d=5,  moderate separation -> stumps have a large edge;
-  B: d=50, signal spread thinly -> stumps have a tiny edge but the linear
-     margin gamma is large (the boosting-relevant "many weak features"
-     regime);
-  C: d=5, strong separation, large m -> the non-vacuous regime of our bound.
+  A: d=5,   moderate separation;
+  B: d=50,  signal spread over all coordinates ("many weak features");
+  C: d=5,   strong separation, large m;
+  D: d=5,   very large m -- the regime gamma^2 m >> log m in which the
+            bound falls below one and decreases with T.
 """
 import json
 import numpy as np
-from common import (make_separable, svm_margin, gd_final, StumpAdaBoost,
-                    pacbayes_bound, ghojogh_bound, loss_of)
+from common import (make_separable, gd_final, StumpAdaBoost,
+                    pacbayes_bound, loss_of)
 
 RNG = np.random.default_rng(7)
 T_GRID = [10, 30, 100, 300, 1000, 3000]
-THETA = 0.01
 DELTA = 0.05
 
 
-def run_design(name, m_train, m_test, d, gamma_target, T_ada=1000):
+def run_design(name, m_train, m_test, d, gamma_target):
     Xtr, ytr, kappa, gamma, wstar = make_separable(m_train, d, 2.0, RNG,
                                                    gamma_target=gamma_target)
     Xte, yte, _, _, _ = make_separable(m_test, d, kappa, RNG,
@@ -49,34 +48,20 @@ def run_design(name, m_train, m_test, d, gamma_target, T_ada=1000):
     out['gd_test_err'] = test_err
     out['gd_train_eps'] = train_eps
 
-    # our explicit bound
+    # our explicit bound (alpha optimized)
     our = [pacbayes_bound(gamma, m_train, T, DELTA)[0] for T in Tg]
     our_a = [pacbayes_bound(gamma, m_train, T, DELTA)[1] for T in Tg]
     out['our_bound'] = our
     out['our_alpha'] = our_a
 
-    # ---- stump AdaBoost: edges and Ghojogh bounds
-    ada = StumpAdaBoost(T_ada).fit(Xtr, ytr)
-    edges = 0.5 - np.array(ada.err_hist)
-    out['ada_mean_edge'] = float(edges.mean())
-    out['ada_min_edge'] = float(edges.min())
-    out['ada_edge_first'] = float(edges[0])
-    out['ada_n_rounds'] = int(ada.n_rounds)
-    out['ada_edges_head'] = edges[:10].tolist()
-    out['ada_edges_tail'] = edges[-5:].tolist()
-    ada_err = [float(np.mean(np.sign(ada.decision_function(Xte)) != yte))]
-    # test error along the AdaBoost path
-    for T in T_GRID[1:]:
+    # ---- stump AdaBoost (beyond-scope check): test error along the path
+    ada_err = []
+    for T in T_GRID:
         a2 = StumpAdaBoost(T).fit(Xtr, ytr)
         ada_err.append(float(np.mean(np.sign(a2.decision_function(Xte)) != yte)))
     out['ada_T'] = T_GRID
     out['ada_test_err'] = ada_err
-    out['ghojogh_min_edge'] = [min(ghojogh_bound(max(out['ada_min_edge'], 1e-9),
-                                                 THETA, T), 99.0)
-                               for T in T_GRID]
-    out['ghojogh_mean_edge'] = [min(ghojogh_bound(max(out['ada_mean_edge'], 1e-9),
-                                                  THETA, T), 99.0)
-                                for T in T_GRID]
+
     show = {k: v for k, v in out.items() if k not in ('gd_train_eps',)}
     show['our_bound'] = [min(b, 2.0) for b in out['our_bound']]
     print(json.dumps(show, indent=1)[:1500], flush=True)
