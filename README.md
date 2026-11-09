@@ -20,7 +20,7 @@ deterministic (up to solver tolerances and platform differences).
 ├── results/                     # precomputed outputs of exp1-exp3 (JSON)
 ├── common.py                    # shared utilities (see below)
 ├── exp1_margin_validation.py    # E1: Monte Carlo margin-bound validation
-├── exp2_bounds_comparison.py    # E2: explicit bound vs. Ghojogh-Crowley comparison
+├── exp2_bounds_comparison.py    # E2: numerical values of the explicit bound
 ├── exp3_realdata.py             # E3: 10x5-fold CV on UCI + overfitting statistics
 ├── make_figures.py              # paper Figures 5.1-5.2
 ├── make_realdata_outputs.py     # paper Figure 6.1 and the real-data LaTeX tables
@@ -41,11 +41,10 @@ figure scripts additionally save the figures into a manuscript directory.
   risk-decay lemmas, and the $\alpha$-corollaries of the paper against the two
   analyzed algorithms, and tracks stagewise AdaBoost as an empirical
   beyond-scope check.
-- **E2 — bound comparison** (`exp2_bounds_comparison.py`): the four synthetic
-  designs (A–D) of Table 5.2; compares the fully explicit PAC-Bayesian bound
-  (inequality (3.8), $\delta=0.05$, $\alpha$ optimized numerically) with the
-  Ghojogh–Crowley bound evaluated at the minimum and mean per-round stump
-  edges.
+- **E2 — bound values** (`exp2_bounds_comparison.py`): the four synthetic
+  designs (A–D) of Table 5.2; evaluates the fully explicit PAC-Bayesian bound
+  (inequality (3.8), $\delta=0.05$, $\alpha$ optimized numerically) together
+  with the test errors of the analyzed algorithm (B) and of stump AdaBoost.
 - **E3 — real data** (`exp3_realdata.py`): $10\times5$-fold stratified CV
   (Letter: $4\times5$) on the seven UCI datasets with decision stumps; test
   error trajectories, prespecified overfitting index with bootstrap CIs,
@@ -115,9 +114,6 @@ present in their results files. With the bundled `results/` in place, the
 - Letter has 20,000 samples and 26 classes. The breast-cancer task uses the
   first column (recurrence status) as the class label and ordinal-encodes the
   nine categorical attributes.
-- The Ghojogh–Crowley bound is applied with $\xi$ = the per-round edge
-  (weighted error $\le 1/2-\xi$ for every round), consistent with their
-  Eq. (111); both the minimum and the mean edge over rounds are reported.
 
 ## License
 
